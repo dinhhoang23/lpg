@@ -1,0 +1,43 @@
+groups:
+    - name: web-security-alerts
+      rules:
+        - alert: SQLInjectionDetected
+          expr: |
+            sum(count_over_time({job="web_attack_detection", attack_type="sqli"} |= "sqli" [15s])) > 0
+          labels:
+            alerttype: SQL_Injection
+            severity: critical
+          annotations:
+            description: A SQL Injection attempt was detected.
+            summary: SQL Injection attempt detected.
+        - alert: XSSDetected
+          expr: |
+            sum(count_over_time({job="web_attack_detection", attack_type="xss"} |= "xss" [15s])) > 0
+          labels:
+            alerttype: XSS
+            severity: high
+          annotations:
+            description: An XSS attack was detected.
+            summary: Cross-Site Scripting (XSS) attempt detected.
+    - name: ssh
+      rules:
+        - alert: High_SSH_Failed_Login_Rate
+          expr: |
+            count_over_time({job="ssh"} |= "Failed password" [5m]) > 1
+          for: 15s
+          labels:
+            severity: critical
+          annotations:
+            description: More than 1 SSH failed login attempts per minute detected over the last 1 minutes. Possible brute-force attack.
+            summary: High rate of SSH failed login attempts
+    - name: log-count-alerts
+      rules:
+        - alert: DOS
+          expr: |
+            rate({job="apache"} |= "GET /dvwa/vulnerabilities/" [5m]) > 1
+          for: 30s
+          labels:
+            severity: warning
+          annotations:
+            description: DOS
+            summary: DOS
