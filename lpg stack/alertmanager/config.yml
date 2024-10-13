@@ -1,0 +1,16 @@
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'ltmh2314@gmail.com'
+  smtp_auth_username: 'ltmh2314@gmail.com'
+  smtp_auth_password: 'aqov pgqi kkui wihf'
+  smtp_require_tls: true
+  resolve_timeout: 5m
+
+route:
+  receiver: 'gmail'
+
+receivers:
+  - name: 'gmail'
+    email_configs:
+      - send_resolved: true
+        to: 'nddh2304@gmail.com'
